@@ -6,10 +6,22 @@ interface IRequest {
 }
 
 class TurnUserAdminUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(private usersRepository: IUsersRepository) {
+    // this.usersRepository = usersRepository;
+  }
 
   execute({ user_id }: IRequest): User {
-    // Complete aqui
+    const userExists = this.usersRepository.findById(user_id);
+
+    if (!userExists) {
+      throw new Error("usuário não encontrado");
+    }
+
+    const user = this.usersRepository.turnAdmin(
+      this.usersRepository.findById(user_id)
+    );
+
+    return user;
   }
 }
 
